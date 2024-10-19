@@ -1,0 +1,4 @@
+__pycache__/
+.env
+roughwork.py
+dags/core_sentiment/views/pageviews-20240101-000000
