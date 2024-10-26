@@ -10,7 +10,11 @@ from core_sentiment.data_processor.load import load
 from core_sentiment.helper.database_engine import create_database
 from core_sentiment.data_processor.excute_sql import execute_sql_file
 from core_sentiment.analysis.top_comany import find_top_company_func
+from core_sentiment.helper.getveiws import getpage, getpageUrl
 
+
+page = getpage()
+url = getpageUrl()
 
 with DAG(
     dag_id="core_sentiment",
@@ -27,13 +31,13 @@ with DAG(
 
     unzip_views = BashOperator(
         task_id="unzip_views",
-        bash_command="gunzip /opt/airflow/dags/core_sentiment/views/pageviews-20240101-000000.gz"
+        bash_command= f"gunzip /opt/airflow/dags/core_sentiment/views/{page}"
     )
 
-    create_database_task = PythonOperator(
-        task_id='create_database',
-        python_callable=create_database,
-    )
+    # create_database_task = PythonOperator(
+    #     task_id='create_database',
+    #     python_callable=create_database,
+    # )
 
     create_table = PostgresOperator(
         task_id='create_table',
@@ -69,6 +73,6 @@ with DAG(
     )
 
     get_views_task >> unzip_views
-    unzip_views >> create_database_task >> create_table
+    unzip_views >> create_table
     unzip_views >> create_clean_csv >> create_sql_script
     [create_table, create_sql_script] >> execute_sql_script >> find_top_company

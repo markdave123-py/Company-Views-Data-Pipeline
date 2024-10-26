@@ -1,9 +1,25 @@
 import os
 import urllib.request
 
+page = 'pageviews-20240601-120000.gz'
+
+
+
+period = '2024/2024-06'
+
+url = f'https://dumps.wikimedia.org/other/pageviews'
+
+def getpage():
+    return page
+
+def unzipedPage():
+    return page.split('.')[0]
+
+def getpageUrl():
+    return f'{url}/{period}/{page}'
 
 def get_views():
-    url = "https://dumps.wikimedia.org/other/pageviews/2024/2024-01/pageviews-20240101-000000.gz"
+    url = getpageUrl()
     dir = "/opt/airflow/dags/core_sentiment/views"
 
     if not os.path.exists(dir):
